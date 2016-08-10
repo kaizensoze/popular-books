@@ -10,9 +10,6 @@ import urllib.parse
 with open('credentials.json') as credentials_file:
     credentials = json.load(credentials_file)
 
-if not credentials:
-    raise RuntimeError('Cannot find credentials.json')
-
 AWS_ACCESS_KEY = credentials['aws_access_key_id']
 AWS_SECRET_ACCESS_KEY = '1234567890' # TODO: credentials['aws_secret_access_key']
 
@@ -40,14 +37,6 @@ signatureSeedString = "\n".join([
     urllib.parse.quote("&".join(sorted(urlParts["params"])), safe="=&")
 ])
 print(signatureSeedString, "\n")
-
-# compare with test file
-with open('test_request.txt', 'r') as test_request_file:
-    test_request_contents = test_request_file.read()
-print(test_request_contents)
-
-if not test_request_contents:
-    raise RuntimeError('Cannot find test_request.txt')
 
 digest = hmac.new(str.encode(AWS_SECRET_ACCESS_KEY), msg=str.encode(signatureSeedString), digestmod=hashlib.sha256).digest()
 decoded_digest = base64.b64encode(digest).decode()
