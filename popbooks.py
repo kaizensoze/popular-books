@@ -15,11 +15,11 @@ AWS_SECRET_ACCESS_KEY = '1234567890' # TODO: credentials['aws_secret_access_key'
 
 # generate Signature param [for test request]
 urlParts = {
-    "method": "GET",
-    "protocol": "http",
-    "domain": "webservices.amazon.com",
-    "path": "/onca/xml",
-    "params": [
+    'method': "GET",
+    'protocol': "http",
+    'domain': "webservices.amazon.com",
+    'path': "/onca/xml",
+    'params': [
         "Service=AWSECommerceService",
         "AWSAccessKeyId=AKIAIOSFODNN7EXAMPLE",
         "AssociateTag=mytag-20",
@@ -31,10 +31,10 @@ urlParts = {
     ]
 }
 signatureSeedString = "\n".join([
-    urlParts["method"],
-    urlParts["domain"],
-    urlParts["path"],
-    urllib.parse.quote("&".join(sorted(urlParts["params"])), safe="=&")
+    urlParts['method'],
+    urlParts['domain'],
+    urlParts['path'],
+    urllib.parse.quote("&".join(sorted(urlParts['params'])), safe='=&')
 ])
 print(signatureSeedString, "\n")
 
