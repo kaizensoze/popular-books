@@ -10,7 +10,11 @@ $ > credentials.json
 }
 ```
 
-Run script.
+Install pip if you don't already have it (https://pip.pypa.io/en/stable/installing/)
+
+Run script
 ```
-python3 popbooks.py
+
+$ pip install -r requirements.txt
+$ python3 popbooks.py
 ```
