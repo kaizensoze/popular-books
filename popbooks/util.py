@@ -11,7 +11,7 @@ import base64
 import hashlib
 import hmac
 
-from popbooks import AWS_SECRET_ACCESS_KEY
+from popbooks.settings import AWS_SECRET_ACCESS_KEY
 
 def generate_timestamp():
     """ Generates timestamp of the format 2014-08-18T12:00:00Z. """
@@ -19,7 +19,7 @@ def generate_timestamp():
     ts = datetime.datetime.fromtimestamp(now).strftime('%Y-%m-%dT%H:%M:%SZ')
     return ts
 
-def generate_signature(url):
+def generate_signature(url, override_key=None):
     url_parts = urlparse(url)
     
     # sort query params
@@ -35,8 +35,9 @@ def generate_signature(url):
     ])
     print(signature_seed_string, "\n")
     
+    key = override_key if override_key else AWS_SECRET_ACCESS_KEY
     digest = hmac.new(
-        str.encode(AWS_SECRET_ACCESS_KEY),
+        key=str.encode(key),
         msg=str.encode(signature_seed_string),
         digestmod=hashlib.sha256
     ).digest()

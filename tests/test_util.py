@@ -1,5 +1,4 @@
 
-import json
 import pytest
 from popbooks.util import generate_signature
 
@@ -14,5 +13,5 @@ class TestGenerateSignature:
         "GET\nwebservices.amazon.com\n/onca/xml\nAWSAccessKeyId=AKIAIOSFODNN7EXAMPLE&AssociateTag=mytag-20&Condition=New&ItemId=B0011ZK6PC%2CB000NK8EWI&Merchant=Amazon&Operation=ItemSearch&Operation=SimilarityLookup&ResponseGroup=Offers%2CItemAttributes&Service=AWSECommerceService&SimilarityType=Intersection&Timestamp=2014-08-18T17%3A39%3A22.000Z&Version=2013-08-01", "nIlF7C6O1T3faoXIZgGVxYXd%2BD%2F39%2BFPSnwdfiQvy9g%3D")
     ])
     def test_sign_request(self, url, string_to_sign, expected_signature):
-      signature = generate_signature(url)
-      assert signature == expected_signature
+        signature = generate_signature(url, override_key='1234567890')
+        assert signature == expected_signature
