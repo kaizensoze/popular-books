@@ -1,6 +1,7 @@
 
-import util
+import popbooks.util as util
 
+# TODO: replace with non-test url
 url = (
     "http://webservices.amazon.com/onca/xml?Service=AWSECommerceService&AWS"
     "AccessKeyId=AKIAIOSFODNN7EXAMPLE&AssociateTag=mytag-20&Operation=ItemL"
@@ -10,3 +11,5 @@ url = (
 url = util.url_with_timestamp(url)
 url = util.url_with_signature(url)
 print(url)
+
+# TODO: use requests to make a request, check response

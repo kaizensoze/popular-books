@@ -1,6 +1,4 @@
 
-import json
-
 import datetime
 import time
 
@@ -13,13 +11,7 @@ import base64
 import hashlib
 import hmac
 
-# get aws credentials
-with open('credentials.json') as credentials_file:
-    credentials = json.load(credentials_file)
-
-AWS_ACCESS_KEY = credentials['aws_access_key_id']
-AWS_SECRET_ACCESS_KEY = '1234567890' # TODO: credentials['aws_secret_access_key']
-AMAZON_ASSOCIATE_ID = credentials['amazon_associate_id']
+from popbooks import AWS_SECRET_ACCESS_KEY
 
 def generate_timestamp():
     """ Generates timestamp of the format 2014-08-18T12:00:00Z. """
@@ -32,20 +24,16 @@ def generate_signature(url):
     
     # sort query params
     query_params = parse_qs(url_parts.query)
+    [value.sort() for key, value in query_params.items()] # sort array values
     od = OrderedDict(sorted(query_params.items()))
     
     signature_seed_string = "\n".join([
         'GET',
         url_parts.netloc,
         url_parts.path,
-        urlencode(od, doseq=True)
+        urlencode(od, doseq=True, quote_via=quote)
     ])
     print(signature_seed_string, "\n")
-    
-    # compare with test file
-    with open('test_request.txt', 'r') as test_request_file:
-        test_request_contents = test_request_file.read()
-    print(test_request_contents, "\n")
     
     digest = hmac.new(
         str.encode(AWS_SECRET_ACCESS_KEY),

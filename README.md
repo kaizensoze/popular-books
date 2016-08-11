@@ -18,3 +18,8 @@ Run script
 $ pip install -r requirements.txt
 $ python3 popbooks.py
 ```
+
+Run tests
+```
+$ py.test tests
+```
