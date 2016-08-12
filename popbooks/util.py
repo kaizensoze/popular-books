@@ -11,7 +11,11 @@ import base64
 import hashlib
 import hmac
 
-from popbooks.settings import AWS_SECRET_ACCESS_KEY
+from popbooks.settings import (
+    AWS_ACCESS_KEY,
+    AWS_SECRET_ACCESS_KEY,
+    AMAZON_ASSOCIATE_ID
+)
 
 def generate_timestamp():
     """ Generates timestamp of the format 2014-08-18T12:00:00Z. """
@@ -45,19 +49,37 @@ def generate_signature(url, override_key=None):
     urlencoded_decoded_digest = quote_plus(decoded_digest)
     return urlencoded_decoded_digest
 
-def url_with_timestamp(url):
-    url_parts = urlparse(url)
-    query_params = parse_qs(url_parts.query)
-    if 'Timestamp' not in query_params:
-        query_params['Timestamp'] = generate_timestamp()
-        url_parts = url_parts._replace(
-            query = urlencode(query_params, doseq=True)
-        )
-    return unquote(url_parts.geturl())
+# def url_with_timestamp(url):
+#     url_parts = urlparse(url)
+#     query_params = parse_qs(url_parts.query)
+#     query_params['Timestamp'] = generate_timestamp()
+#     url_parts = url_parts._replace(query = urlencode(query_params, doseq=True))
+#     return unquote(url_parts.geturl())
+#     
+# def url_with_signature(url):
+#     url_parts = urlparse(url)
+#     query_params = parse_qs(url_parts.query)
+#     query_params['Signature'] = generate_signature(url)
+#     url_parts = url_parts._replace(query = urlencode(query_params, doseq=True))
+#     return unquote(url_parts.geturl())
+
+def fill_in_url(url):
+    params_to_add = {
+        'AWSAccessKeyId': AWS_ACCESS_KEY,
+        'AssociateTag': AMAZON_ASSOCIATE_ID,
+        'Timestamp': generate_timestamp(),
+    }
     
-def url_with_signature(url):
     url_parts = urlparse(url)
     query_params = parse_qs(url_parts.query)
-    query_params['Signature'] = generate_signature(url)
+    
+    for key, val in params_to_add.items():
+        if key not in query_params:
+            query_params[key] = val
+            url_parts = url_parts._replace(query = urlencode(query_params, doseq=True))
+    
+    # add signature
+    query_params['Signature'] = generate_signature(url_parts.geturl(), override_key='1234567890')
     url_parts = url_parts._replace(query = urlencode(query_params, doseq=True))
+    
     return unquote(url_parts.geturl())
