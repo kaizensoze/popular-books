@@ -7,7 +7,7 @@ Edit settings
 $ cp settings.py.template settings.py
 ```
 
-Install pip if you don't already have it (https://pip.pypa.io/en/stable/installing/)
+Install requirements
 ```
 $ pip install -r requirements.txt
 ```
@@ -15,7 +15,7 @@ $ pip install -r requirements.txt
 ### Run
 
 ```
-$ python3 popbooks.py
+$ python3 list_books.py
 ```
 
 ### Tests

@@ -15,5 +15,5 @@ pip-log.txt
 # dotenv
 .env
 
-# settings
 popbooks/settings.py
+out*.xml
