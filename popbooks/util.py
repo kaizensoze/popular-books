@@ -19,8 +19,8 @@ from popbooks.settings import (
 
 def generate_timestamp():
     """ Generates timestamp of the format 2014-08-18T12:00:00Z. """
-    now = time.time()
-    ts = datetime.datetime.fromtimestamp(now).strftime('%Y-%m-%dT%H:%M:%SZ')
+    now = datetime.datetime.utcnow()
+    ts = now.strftime('%Y-%m-%dT%H:%M:%SZ')
     return ts
 
 def generate_signature(url, override_key=None):
@@ -37,7 +37,7 @@ def generate_signature(url, override_key=None):
         url_parts.path,
         urlencode(od, doseq=True, quote_via=quote)
     ])
-    print(signature_seed_string, "\n")
+    # print(signature_seed_string, "\n")
     
     key = override_key if override_key else AWS_SECRET_ACCESS_KEY
     digest = hmac.new(
@@ -48,20 +48,6 @@ def generate_signature(url, override_key=None):
     decoded_digest = base64.b64encode(digest).decode()
     urlencoded_decoded_digest = quote_plus(decoded_digest)
     return urlencoded_decoded_digest
-
-# def url_with_timestamp(url):
-#     url_parts = urlparse(url)
-#     query_params = parse_qs(url_parts.query)
-#     query_params['Timestamp'] = generate_timestamp()
-#     url_parts = url_parts._replace(query = urlencode(query_params, doseq=True))
-#     return unquote(url_parts.geturl())
-#     
-# def url_with_signature(url):
-#     url_parts = urlparse(url)
-#     query_params = parse_qs(url_parts.query)
-#     query_params['Signature'] = generate_signature(url)
-#     url_parts = url_parts._replace(query = urlencode(query_params, doseq=True))
-#     return unquote(url_parts.geturl())
 
 def fill_in_url(url):
     params_to_add = {
@@ -79,7 +65,7 @@ def fill_in_url(url):
             url_parts = url_parts._replace(query = urlencode(query_params, doseq=True))
     
     # add signature
-    query_params['Signature'] = generate_signature(url_parts.geturl(), override_key='1234567890')
+    query_params['Signature'] = generate_signature(url_parts.geturl()) # override_key='1234567890'
     url_parts = url_parts._replace(query = urlencode(query_params, doseq=True))
     
     return unquote(url_parts.geturl())
